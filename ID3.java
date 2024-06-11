@@ -1,6 +1,7 @@
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.Scanner;
 
 public class ID3 {
 
@@ -69,7 +70,8 @@ public class ID3 {
     public void classify(TheArrayList<TheArrayList<String>> testData) {
         if (decisionTree == null)
             error("Please run training phase before classification");
-        for(int i = 1; i < testData.size(); i++) {
+        
+        for(int i = 0; i < testData.size(); i++) {
             String ans = transverse(decisionTree, testData.get(i));
             System.out.println(ans);
         }
@@ -256,12 +258,12 @@ public class ID3 {
 
     public static void main(String[] args) {
         ID3 id3 = new ID3();
-        TheArrayList<TheArrayList<String>> trainingData = new TheArrayList<>(100); // Sesuaikan ukuran maksimal sesuai kebutuhan
-
-        try (BufferedReader br = new BufferedReader(new FileReader("data.txt"))) {
+        TheArrayList<TheArrayList<String>> trainingData = new TheArrayList<>(600); // Adjust size as needed
+    
+        try (BufferedReader br = new BufferedReader(new FileReader("train_data.csv"))) {
             String line;
             while ((line = br.readLine()) != null) {
-                TheArrayList<String> row = new TheArrayList<>(100); // Sesuaikan ukuran maksimal sesuai kebutuhan
+                TheArrayList<String> row = new TheArrayList<>(600); // Adjust size as needed
                 String[] splitLine = line.split(",");
                 for (String s : splitLine) {
                     row.add(s);
@@ -271,8 +273,42 @@ public class ID3 {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
+    
         id3.train(trainingData);
         id3.printTree();
+    
+        Scanner scanner = new Scanner(System.in);
+        TheArrayList<String> testInstance = new TheArrayList<>(id3.attributes);
+    
+        System.out.println("Enter numeric values for the following attributes:");
+        System.out.print("Glucose: ");
+        int glucose = Integer.parseInt(scanner.nextLine().trim());
+        String glucoseCategory = glucose <= 140 ? "Baik" : (glucose <= 199 ? "Sedang" : "Buruk");
+        testInstance.add(glucoseCategory);
+    
+        System.out.print("Blood Pressure: ");
+        int bloodPressure = Integer.parseInt(scanner.nextLine().trim());
+        String bpCategory = bloodPressure <= 80 ? "Normal" : (bloodPressure <= 89 ? "Pre-Hipertensi" : "Hipertensi");
+        testInstance.add(bpCategory);
+    
+        System.out.print("BMI: ");
+        double bmi = Double.parseDouble(scanner.nextLine().trim());
+        String bmiCategory = bmi <= 18.5 ? "Kurang" : (bmi <= 29.9 ? "Normal" : "Obese");
+        testInstance.add(bmiCategory);
+    
+        System.out.print("Diabetes Pedigree: ");
+        double diabetesPedigree = Double.parseDouble(scanner.nextLine().trim());
+        String dpCategory = diabetesPedigree <= 0.69 ? "Aman" : (diabetesPedigree <= 1.49 ? "Waspada" : "Bahaya");
+        testInstance.add(dpCategory);
+    
+        System.out.print("Age: ");
+        int age = Integer.parseInt(scanner.nextLine().trim());
+        String ageCategory = age <= 20 ? "Remaja" : (age <= 59 ? "Dewasa" : "Lansia");
+        testInstance.add(ageCategory);
+    
+        TheArrayList<TheArrayList<String>> testData = new TheArrayList<>(1);
+        testData.add(testInstance);
+        id3.classify(testData);
+        scanner.close();
     }
 }
