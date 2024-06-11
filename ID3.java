@@ -5,6 +5,14 @@ import java.util.Scanner;
 
 public class ID3 {
 
+    private String used;
+    private int attributes;
+    private int examples;
+    private TreeNode decisionTree;
+    private TheArrayList<TheArrayList<String>> data;
+    private TheArrayList<TheArrayList<String>> strings;
+    private TheArrayList<Integer> stringCount;
+
     class TreeNode {
         TreeNode[] children;
         int value;
@@ -31,22 +39,14 @@ public class ID3 {
         }
     }
 
-    private String used;
-    private int attributes;
-    private int examples;
-    private TreeNode decisionTree;
-    private TheArrayList<TheArrayList<String>> data;
-    private TheArrayList<TheArrayList<String>> strings;
-    private TheArrayList<Integer> stringCount;
-
     public ID3() {
         used = "used";
         attributes = 0;
         examples = 0;
         decisionTree = null;
-        data = new TheArrayList<>(100); // Sesuaikan ukuran maksimal sesuai kebutuhan
-        strings = new TheArrayList<>(100); // Sesuaikan ukuran maksimal sesuai kebutuhan
-        stringCount = new TheArrayList<>(100); // Sesuaikan ukuran maksimal sesuai kebutuhan
+        data = new TheArrayList<>(600); // Sesuaikan ukuran maksimal sesuai kebutuhan
+        strings = new TheArrayList<>(600); // Sesuaikan ukuran maksimal sesuai kebutuhan
+        stringCount = new TheArrayList<>(600); // Sesuaikan ukuran maksimal sesuai kebutuhan
     }
 
     public void printTree() {
@@ -228,7 +228,7 @@ public class ID3 {
         examples = trainingData.size();
         TheArrayList<TheArrayList<String>> temp = new TheArrayList<>(attributes);
         for (int i = 0; i < attributes; i++) {
-            TheArrayList<String> attrList = new TheArrayList<>(100); // Sesuaikan ukuran maksimal sesuai kebutuhan
+            TheArrayList<String> attrList = new TheArrayList<>(600); // Sesuaikan ukuran maksimal sesuai kebutuhan
             attrList.add(trainingData.get(0).get(i));
             temp.add(attrList);
         }
@@ -279,7 +279,12 @@ public class ID3 {
     
         Scanner scanner = new Scanner(System.in);
         TheArrayList<String> testInstance = new TheArrayList<>(id3.attributes);
-    
+        System.out.println("Glucose \t\t: (<= 140 : Baik) (141-199 : Sedang) (>= 200 Buruk)");
+        System.out.println("Bloodpressure \t\t: (<=80 : Normal) (81-89 : Pre-Hipertensi) (>= 90 : Hipertensi)");
+        System.out.println("BMI\t\t\t: (<=18.5 : Kurang) (18.6 - 29.9 : Normal) (>30 : Obese)");
+        System.out.println("Dibetes Pedigree\t: (<= 0.69 : Aman) (0.70 - 1.49 : Waspada) (>= 1.5 : Bahaya)");
+        System.out.println("Age\t\t\t: (<= 20 : Remaja) (21-59 : Dewasa) (>= 60 : Lansia)");
+        
         System.out.println("Enter numeric values for the following attributes:");
         System.out.print("Glucose: ");
         int glucose = Integer.parseInt(scanner.nextLine().trim());
@@ -308,6 +313,7 @@ public class ID3 {
     
         TheArrayList<TheArrayList<String>> testData = new TheArrayList<>(1);
         testData.add(testInstance);
+    
         id3.classify(testData);
         scanner.close();
     }
