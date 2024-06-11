@@ -287,12 +287,12 @@ public class ID3 {
         
         System.out.println("Enter numeric values for the following attributes:");
         System.out.print("Glucose: ");
-        int glucose = Integer.parseInt(scanner.nextLine().trim());
+        double glucose = Integer.parseInt(scanner.nextLine().trim());
         String glucoseCategory = glucose <= 140 ? "Baik" : (glucose <= 199 ? "Sedang" : "Buruk");
         testInstance.add(glucoseCategory);
     
         System.out.print("Blood Pressure: ");
-        int bloodPressure = Integer.parseInt(scanner.nextLine().trim());
+        double bloodPressure = Integer.parseInt(scanner.nextLine().trim());
         String bpCategory = bloodPressure <= 80 ? "Normal" : (bloodPressure <= 89 ? "Pre-Hipertensi" : "Hipertensi");
         testInstance.add(bpCategory);
     
