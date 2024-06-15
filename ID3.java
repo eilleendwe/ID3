@@ -1,31 +1,40 @@
+// Import library
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Scanner;
 
-public class ID3 {
 
-    private String used;
-    private int attributes;
-    private int examples;
-    private TreeNode decisionTree;
-    private TheArrayList<TheArrayList<String>> data;
-    private TheArrayList<TheArrayList<String>> strings;
-    private TheArrayList<Integer> stringCount;
+public class ID3 {
+    // Deklarasi variabel yang akan digunakan
+    private String used; //status atribut yang sudah digunakan
+    private int attributes; //jumlah atribut
+    private int examples; //jumlah contoh
+    private TreeNode decisionTree; //tree dari decision tree, yang digunakan untuk klasifikasi
+    private TheArrayList<TheArrayList<String>> data; //data train
+    private TheArrayList<TheArrayList<String>> strings; //nilai nilai unik dari atribut
+    private TheArrayList<Integer> stringCount; //jumlah nilai unik setiap atribut
+
+	/** Setiap node dari tree berisi nomor atribut (untuk node bukan daun) atau //nomor kelas (untuk node daun) dalam <b>value</b>, dan array dari //node tree dalam <b>children</b> yang berisi setiap anak dari node tersebut (untuk node bukan daun).
+	 *Nomor atribut sesuai dengan nomor kolom dalam file pelatihan dan pengujian. Anak-anak diurutkan dalam urutan yang sama dengan Strings dalam strings[][].
+**/
 
     class TreeNode {
-        TreeNode[] children;
-        int value;
+        TreeNode[] children; //array children dari node
+        int value; // nilai atribute atau kelas dari node
 
+        // konstruktor
         public TreeNode(TreeNode[] ch, int val) {
             value = val;
             children = ch;
         }
 
+        // mengubah node ke string
         public String toString() {
             return toString("");
         }
 
+        // mengubah node ke string dengan indent
         String toString(String indent) {
             if (children != null) {
                 String s = "";
@@ -39,6 +48,7 @@ public class ID3 {
         }
     }
 
+    // konstruktor untuk inisialisasi ID3
     public ID3() {
         used = "used";
         attributes = 0;
@@ -49,6 +59,7 @@ public class ID3 {
         stringCount = new TheArrayList<>(600); // Sesuaikan ukuran maksimal sesuai kebutuhan
     }
 
+    // Fungsi untuk mencetak decision tree
     public void printTree() {
         if (decisionTree == null)
             error("Attempted to print null Tree");
@@ -56,17 +67,24 @@ public class ID3 {
             System.out.println(decisionTree);
     }
 
+    // Fungsi untuk mencetak pesan error
     static void error(String msg) {
         System.err.println("Error: " + msg);
         System.exit(1);
     }
 
+    // Mendefinisikan variabel konstan
     static final double LOG2 = Math.log(2.0);
 
+    // Fungsi untuk menghitung x log x basis 2
     static double xlogx(double x) {
         return x == 0? 0: x * Math.log(x) / LOG2;
     }
 
+    /**
+     Fungsi untuk menjalankan pohon keputusan pada contoh-contoh yang diberikan dalam testData, dan mencetak nama kelas hasil, satu per baris, untuk setiap contoh dalam testData
+     */
+    // Fungsi untuk mengklasifikasikan data uji dengan menggunakan decision tree
     public void classify(TheArrayList<TheArrayList<String>> testData) {
         if (decisionTree == null)
             error("Please run training phase before classification");
@@ -77,6 +95,8 @@ public class ID3 {
         }
     }
 
+
+    // Fungsi untuk menelusuri decision tree berdasarkan nilai atribut dalam row dan mangambil hasil class yang diprediksi
     public String transverse(TreeNode currentNode, TheArrayList<String> row) {
         if (currentNode.children == null) {
             return strings.get(attributes-1).get(currentNode.value);
@@ -97,6 +117,7 @@ public class ID3 {
         }
     }
 
+    // Fungsi untuk melatih model ID3 dengan data latih
     public void train(TheArrayList<TheArrayList<String>> trainingData) {
         indexStrings(trainingData);
         TheArrayList<String> usedAttributes = data.get(0);
@@ -104,6 +125,7 @@ public class ID3 {
         buildTree(decisionTree, trainingData, usedAttributes);
     }
 
+    // Fungsi untuk memeriksa apakah semua atribut sudah digunakanj
     boolean checkUsedAttributes(TheArrayList<String> attrCol) {
         int attrCounter = 0;
         for(int i = 0; i < attrCol.size() - 1; i++) {
@@ -114,6 +136,7 @@ public class ID3 {
         return attrCounter == attrCol.size() - 1;
     }
 
+    // Fungsi untuk mendapatkan subset data berdasarkan nilai atribut
     public TheArrayList<TheArrayList<String>> getSubset(TheArrayList<TheArrayList<String>> currentDataSet, int attr, int attrVal) {
         int attrCounter = countAttributes(currentDataSet, attr, attrVal);
         TheArrayList<TheArrayList<String>> subSet = new TheArrayList<>(attrCounter+1);
@@ -126,15 +149,17 @@ public class ID3 {
         return subSet;
     }
 
+    // Fungsi untuk membangun decision tree secara rekursif
     public void buildTree(TreeNode node, TheArrayList<TheArrayList<String>> currentDataSet, TheArrayList<String> usedAttributes){
-        double rootEntropy = calcEntropy(currentDataSet);
+        double rootEntropy = calcEntropy(currentDataSet); ;// menghitung entropu dari dataset saat ini
         double rows = examples-1;
-        double comparator = 0;
-        int bestAttribute = 0;
-        double[] infoGain = new double[attributes];
-        double[] subSetEntropy;
-        double[] instanceCount;
+        double comparator = 0; // menyimpan nilai information gain tertinggi
+        int bestAttribute = 0; // menyimpan indekx atribut dengan information gain tertinggi
+        double[] infoGain = new double[attributes]; // meyimpan information gain dari setiap atribut
+        double[] subSetEntropy; // meyimpan entropy dari setiap subset data
+        double[] instanceCount; // menyimpan jumlah instance dari setiap subset data
 
+        // jika entropy == 0 maka akan jadi leaf node
         if (rootEntropy <= 0.0 || checkUsedAttributes(usedAttributes)) {
             int leafClass = 0;
             int instances = 0;
@@ -146,6 +171,7 @@ public class ID3 {
             }
             node.value = leafClass;
             return;
+            //  menghitung entropy untuk setiap subset data
         } else {
             for (int i = 0; i < currentDataSet.get(0).size()-1; i++) {
                 if (usedAttributes.get(i).equals(used)) {
@@ -275,7 +301,7 @@ public class ID3 {
         }
     
         id3.train(trainingData);
-        id3.printTree();
+        // id3.printTree();
     
         Scanner scanner = new Scanner(System.in);
         TheArrayList<String> testInstance = new TheArrayList<>(id3.attributes);
