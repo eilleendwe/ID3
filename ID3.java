@@ -89,10 +89,14 @@ public class ID3 {
         if (decisionTree == null)
             error("Please run training phase before classification");
         
-        for(int i = 0; i < testData.size(); i++) {
-            String ans = transverse(decisionTree, testData.get(i));
-            System.out.println(ans);
-        }
+            for(int i = 0; i < testData.size(); i++) {
+                String ans = transverse(decisionTree, testData.get(i));
+                if (ans.equalsIgnoreCase("No")) {
+                    System.out.println("Hasil prediksi:\nAnda tidak mengidap Diabetes.");
+                } else if (ans.equalsIgnoreCase("Yes")) {
+                    System.out.println("Hasil prediksi:\nAnda mengidap Diabetes.");
+                } 
+            }
     }
 
 
@@ -301,7 +305,7 @@ public class ID3 {
         }
     
         id3.train(trainingData);
-        // id3.printTree();
+        id3.printTree();
     
         Scanner scanner = new Scanner(System.in);
         TheArrayList<String> testInstance = new TheArrayList<>(id3.attributes);
