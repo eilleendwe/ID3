@@ -310,7 +310,7 @@ public class ID3 {
         TheArrayList<String> testInstance = new TheArrayList<>(id3.attributes);
         System.out.println("Glucose \t\t: (<= 140 : Baik) (141-199 : Sedang) (>= 200 Buruk)");
         System.out.println("Bloodpressure \t\t: (<=80 : Normal) (81-89 : Pre-Hipertensi) (>= 90 : Hipertensi)");
-        System.out.println("BMI\t\t\t\t: (<=18.5 : Kurang) (18.6 - 29.9 : Normal) (>30 : Obese)");
+        System.out.println("BMI\t\t\t: (<=18.5 : Kurang) (18.6 - 29.9 : Normal) (>30 : Obese)");
         System.out.println("Dibetes Pedigree\t: (<= 0.69 : Aman) (0.70 - 1.49 : Waspada) (>= 1.5 : Bahaya)");
         System.out.println("Age\t\t\t: (<= 20 : Remaja) (21-59 : Dewasa) (>= 60 : Lansia)");
         
