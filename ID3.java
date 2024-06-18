@@ -348,9 +348,11 @@
 //     }
 // }
 
+// ECS629/759 Assignment 2 - ID3 Skeleton Code
+// Author: Simon Dixon
+// ID3 Implementation completed by Hoang Le - 161140218
 
-
-// Import library
+// import library
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -367,10 +369,10 @@ public class ID3 {
     private TheArrayList<TheArrayList<String>> strings; //nilai nilai unik dari atribut
     private TheArrayList<Integer> stringCount; //jumlah nilai unik setiap atribut
 
-	/** Setiap node dari tree berisi nomor atribut (untuk node bukan daun) atau //nomor kelas (untuk node daun) dalam <b>value</b>, dan array dari //node tree dalam <b>children</b> yang berisi setiap anak dari node tersebut (untuk node bukan daun).
-	 *Nomor atribut sesuai dengan nomor kolom dalam file pelatihan dan pengujian. Anak-anak diurutkan dalam urutan yang sama dengan Strings dalam strings[][].
-**/
 
+	 /**
+      Nomor atribut sesuai dengan nomor kolom dalam file data train dan data test. Children diurutkan dalam urutan yang sama dengan Strings dalam strings[][].
+    **/
     class TreeNode {
         TreeNode[] children; //array children dari node
         int value; // nilai atribute atau kelas dari node
@@ -434,9 +436,9 @@ public class ID3 {
     }
 
     /**
-     Fungsi untuk menjalankan pohon keputusan pada contoh-contoh yang diberikan dalam testData, dan mencetak nama kelas hasil, satu per baris, untuk setiap contoh dalam testData
+     fungsi untuk menjalankan pohon keputusan pada contoh-contoh yang diberikan dalam testData, dan mencetak nama kelas hasil, satu per baris, untuk setiap contoh dalam testData
      */
-    // Fungsi untuk mengklasifikasikan data uji dengan menggunakan decision tree
+    // fungsi untuk mengklasifikasikan data uji dengan menggunakan decision tree
     public void classify(TheArrayList<TheArrayList<String>> testData) {
         if (decisionTree == null)
             error("Please run training phase before classification");
@@ -452,14 +454,14 @@ public class ID3 {
     }
 
 
-    // Fungsi untuk menelusuri decision tree berdasarkan nilai atribut dalam row dan mangambil hasil class yang diprediksi
+    // fungsi untuk menelusuri decision tree berdasarkan nilai atribut dalam row dan mangambil hasil class yang diprediksi
     public String transverse(TreeNode currentNode, TheArrayList<String> row) {
         // jika node tidak punya anak maka return indeks kategori label (Yes atau No) 
         if (currentNode.children == null) {
             return strings.get(attributes-1).get(currentNode.value);
         } else {
             int posInStrings = -1;
-            //loop untuk mencari kategori attribute pada indeks ini dalam list strings
+            // loop untuk mencari kategori attribute pada indeks ini dalam list strings
             for (int i = 0; i < strings.get(currentNode.value).size(); i++) {
                 // jika ditemukan, posInString diisi index ke-i
                 if (row.get(currentNode.value).equals(strings.get(currentNode.value).get(i))) {
@@ -478,7 +480,7 @@ public class ID3 {
         }
     }
 
-    // Fungsi untuk melatih model ID3 dengan data latih
+    // fungsi untuk melatih model ID3 dengan data latih
     public void train(TheArrayList<TheArrayList<String>> trainingData) {
         indexStrings(trainingData);
         // usedAttributes berisi attribute dari data
@@ -488,7 +490,7 @@ public class ID3 {
         buildTree(decisionTree, trainingData, usedAttributes);
     }
 
-    // Fungsi untuk memeriksa apakah semua atributte sudah digunakan
+    // fungsi untuk memeriksa apakah semua atributte sudah digunakan
     boolean checkUsedAttributes(TheArrayList<String> attrCol) {
         // inisialisasi attrCounter untuk menyimpan jumlah sttribute yang telah digunakan
         int attrCounter = 0;
@@ -503,7 +505,7 @@ public class ID3 {
         return attrCounter == attrCol.size() - 1;
     }
 
-    // Fungsi untuk mendapatkan subset data berdasarkan attribute dengan kategori yang diminta
+    // fungsi untuk mendapatkan subset data berdasarkan attribute dengan kategori yang diminta
     public TheArrayList<TheArrayList<String>> getSubset(TheArrayList<TheArrayList<String>> currentDataSet, int attr, int attrVal) {
         // attrCounter menyimpan jumlah baris dari attribute dengan kategori yg diminta
         int attrCounter = countAttributes(currentDataSet, attr, attrVal);
@@ -624,7 +626,7 @@ public class ID3 {
         }
     }
 
-    // Fungsi untuk menghitung dan mengembalikan jumlah baris dari attribute dengan kategori yang diminta
+    // fungsi untuk menghitung dan mengembalikan jumlah baris dari attribute dengan kategori yang diminta
     public int countAttributes(TheArrayList<TheArrayList<String>> currentDataSet, int attr, int attrVal) {
         int count = 0;
         // memeriksa ukuran baris. apabila 1, berarti hanya berisi header sehingga langsung return count
@@ -666,7 +668,7 @@ public class ID3 {
         attributes = trainingData.get(0).size();// attributes: menyimpan jumlah attributes dalam dataset
         examples = trainingData.size();// menyimpan jumlah baris dari trainingData
         TheArrayList<TheArrayList<String>> temp = new TheArrayList<>(attributes);// list temp untuk menampung sementara
-        
+
         // loop untuk mengakses attribute
         for (int i = 0; i < attributes; i++) {
             TheArrayList<String> attrList = new TheArrayList<>(600); // Sesuaikan ukuran maksimal sesuai kebutuhan
@@ -729,7 +731,6 @@ public class ID3 {
         }
     
         id3.train(trainingData);
-        id3.printTree();
     
         Scanner scanner = new Scanner(System.in);
         TheArrayList<String> testInstance = new TheArrayList<>(id3.attributes);
